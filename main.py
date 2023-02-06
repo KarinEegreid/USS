@@ -1,10 +1,13 @@
 # Karl Paju IS22
-import pygame
-import time
+# Vajalikud packaged
 import random
 
+import pygame
+
+# Pygame käivitamine
 pygame.init()
 
+# Värvide defineerimine kasutades RGB standardit
 white = (255, 255, 255)
 yellow = (255, 255, 102)
 black = (0, 0, 0)
@@ -12,68 +15,80 @@ red = (213, 50, 80)
 green = (0, 255, 0)
 blue = (50, 153, 213)
 
-dis_width = 600
-dis_height = 400
+# Ekraani loomine ning pealkirja seadistamine
+dis_width = 800
+dis_height = 600
 
 dis = pygame.display.set_mode((dis_width, dis_height))
-pygame.display.set_caption('Snake Game by Edureka')
+pygame.display.set_caption('Karl Paju IS22 Ussimäng')
 
+# Loob mängu kiiruse juhtimiseks kellaobjekt.
 clock = pygame.time.Clock()
 
+# Määrame ussi suuruse ning kiiruse
 snake_block = 10
 snake_speed = 15
+# Fontide määramine
+font_style = pygame.font.SysFont("bahnschrift", 20)
+score_font = pygame.font.SysFont("comicsansms", 30)
 
-font_style = pygame.font.SysFont("bahnschrift", 25)
-score_font = pygame.font.SysFont("comicsansms", 35)
 
-
+# Määrab funktsioon Your_score(), et kuvada mängija hetke skoori.
 def Your_score(score):
-    value = score_font.render("Your Score: " + str(score), True, yellow)
+    value = score_font.render("Sinu skoor: " + str(score), True, yellow)
     dis.blit(value, [0, 0])
 
 
+# Määrab funktsioon our_snake(), et joonistada madu ekraanile.
 def our_snake(snake_block, snake_list):
     for x in snake_list:
         pygame.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
 
 
+# Määrab funktsiooni message(), et joonistada ekraanile nõutud värvides teksti.
 def message(msg, color):
     mesg = font_style.render(msg, True, color)
     dis.blit(mesg, [dis_width / 6, dis_height / 3])
 
 
+# Määrab funktsioon gameLoop(), et käitada mängu seni, kuni mängija kaotab või lahkub.
 def gameLoop():
     game_over = False
     game_close = False
 
+    # Mao esialgne asend
     x1 = dis_width / 2
     y1 = dis_height / 2
 
+    # Mao asendi esialgne muutus
     x1_change = 0
     y1_change = 0
 
+    # Initsialiseerib madu
     snake_List = []
     Length_of_snake = 1
 
+    # Toidu algne asend
     foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
     foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
-
+    # Loop kontrollib kas mäng on läbi või ei
     while not game_over:
-
+        # Kui mäng on läbi siis tuleb ekraanile sõnum, et ta kaotas.
         while game_close == True:
+            # Display "game over" message
             dis.fill(blue)
-            message("You Lost! Press C-Play Again or Q-Quit", red)
+            message("Kaotasid. Vajuta C-d, et uuesti mängida või Q-d, et mäng sulgeda.", red)
             Your_score(Length_of_snake - 1)
             pygame.display.update()
 
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_q:
+                    if event.key == pygame.K_q:  # Lahkub mängust kui Q-d vajutatakse
                         game_over = True
                         game_close = False
                     if event.key == pygame.K_c:
                         gameLoop()
-
+        # nuppude määramine, et uss ekraanil liiguks kasutaja sisestuste järgi.
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
