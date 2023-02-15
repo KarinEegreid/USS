@@ -61,8 +61,8 @@ def gameLoop():
     y1 = dis_height / 2
 
     # Mao asendi esialgne muutus
-    x1_change = 0
-    y1_change = 0
+    x1_change = 0  # mao esialgne asend x teljel
+    y1_change = 0  # mao esialgne asend y teljel
 
     # Initsialiseerib madu
     snake_List = []
@@ -88,55 +88,57 @@ def gameLoop():
                         game_close = False
                     if event.key == pygame.K_c:
                         gameLoop()
+      
         # nuppude määramine, et uss ekraanil liiguks kasutaja sisestuste järgi.
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pygame.event.get():  # Käib läbi kõik mängus toimunud sündmused
+            if event.type == pygame.QUIT:  # Kui kasutaja soovib mängu sulgeda, siis märgib game_over muutuja True'ks
                 game_over = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    x1_change = -snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_RIGHT:
-                    x1_change = snake_block
-                    y1_change = 0
-                elif event.key == pygame.K_UP:
-                    y1_change = -snake_block
-                    x1_change = 0
-                elif event.key == pygame.K_DOWN:
-                    y1_change = snake_block
-                    x1_change = 0
+            if event.type == pygame.KEYDOWN:  # Kui kasutaja vajutab mingit klahvi
+                if event.key == pygame.K_LEFT:  # Kui kasutaja vajutab vasakule noolt
+                    x1_change = -snake_block  # Muudab mängija x-koordinaati
+                    y1_change = 0  # ei muuda y koordinaati
+                elif event.key == pygame.K_RIGHT:  # Kui kasutaja vajutab paremale noolt
+                    x1_change = snake_block  # muudab mängija x-koordinaati
+                    y1_change = 0  # ei muuda y koordinaati
+                elif event.key == pygame.K_UP:  # Kui kasutaja vajutab üles noolt
+                    y1_change = -snake_block  # Muudab mängija y-koordinaati
+                    x1_change = 0  # ei muuda x koordinaati
+                elif event.key == pygame.K_DOWN:  # Kui kasutaja vajutab alla noolt
+                    y1_change = snake_block  # muudab mängija y-koordinaati
+                    x1_change = 0  # ei muuda x koordinaati
 
-        if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
+        if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:  # Kontrollib, kas mängija läheb ekraanist välja
             game_close = True
-        x1 += x1_change
-        y1 += y1_change
-        dis.fill(blue)
-        pygame.draw.rect(dis, green, [foodx, foody, snake_block, snake_block])
-        snake_Head = []
-        snake_Head.append(x1)
-        snake_Head.append(y1)
-        snake_List.append(snake_Head)
-        if len(snake_List) > Length_of_snake:
-            del snake_List[0]
+        x1 += x1_change  # Muudab mängija x-koordinaati vastavalt x1_change väärtusele
+        y1 += y1_change  # Muudab mängija y-koordinaati vastavalt y1_change väärtusele
+        dis.fill(blue)  # Täidab ekraani sinise värviga
+        pygame.draw.rect(dis, green, [foodx, foody, snake_block, snake_block])  # Joonistab toidu ja määrab selle värvi
+        snake_Head = []  # Loob tühja listi mao pea jaoks
+        snake_Head.append(x1)  # Lisab x-koordinaadi madala küljega listi
+        snake_Head.append(y1)  # Lisab y-koordinaadi madala küljega listi
+        snake_List.append(snake_Head)  # Lisab mao pea listi madala küljega
+        if len(snake_List) > Length_of_snake:  # Kui madu on pikem kui vaja
+            del snake_List[0]  # Eemaldab madu lõpust ühe jupi
 
-        for x in snake_List[:-1]:
-            if x == snake_Head:
-                game_close = True
+        for x in snake_List[:-1]:  # Käib läbi kogu mao
+            if x == snake_Head:  # Kui madu põrkab vastu iseennast
+                game_close = True  # Mäng lõpetatakse
 
-        our_snake(snake_block, snake_List)
-        Your_score(Length_of_snake - 1)
+        our_snake(snake_block, snake_List)  # joonistab ussi
+        Your_score(Length_of_snake - 1)  # arvutab skoori lahutades ussi pikkusest ühe
 
-        pygame.display.update()
+        pygame.display.update()  # uuendab ekraani
 
-        if x1 == foodx and y1 == foody:
-            foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
-            foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
-            Length_of_snake += 1
+        if x1 == foodx and y1 == foody:  # Kui madu sööb toidu
+            foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0  # Määrab toidu uue x-koordinaadi
+            foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0  # Määrab toidu uue y-koordinaadi
+            Length_of_snake += 1  # Lisab ühe jupi mao pikkusele
 
-        clock.tick(snake_speed)
+        clock.tick(snake_speed)  # Paus mängu kiiruse säilitamiseks
 
-    pygame.quit()
-    quit()
+    pygame.quit()  # Sulgeb pygame'i mooduli
+    quit()  # Lõpetab programmi töö
 
 
 gameLoop()
+
