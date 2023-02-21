@@ -1,7 +1,3 @@
-# Karl Paju IS22
-# Vajalikud packaged
-import random
-
 import pygame
 
 # Pygame käivitamine
@@ -30,8 +26,10 @@ snake_block = 10  # Määrab iga mao osa suuruse, mis on 10 pikslit.
 snake_speed = 15  # Määrab mao liikumiskiiruse pikslites sekundis.
 
 # Fontide määramine
+
 font_style = pygame.font.SysFont("bahnschrift", 20)  # loob tavalise fonti mida saab kasutada nt death screeni loomisel
 score_font = pygame.font.SysFont("comicsansms", 30)  # loob skoori fonti
+highscore_font = pygame.font.SysFont("comicsansms", 30)  # loob highscore fonti.
 
 
 # Määrab funktsioon Your_score(), et kuvada mängija hetke skoori.
@@ -39,6 +37,35 @@ def Your_score(score):  # Funktsioon kuvab mängija skoori mängu ekraani ülemi
     value = score_font.render("Sinu skoor: " + str(score), True,
                               yellow)  # Renderdab skoori sõne vastavalt fondile ja salvestab selle muutujasse value.
     dis.blit(value, [0, 0])  # Kuvab skoori muutuja value väärtuse mängu akna ülemises vasakus nurgas.
+
+
+def highscore(score):
+    highscore_file = "highscore.txt"
+    try:
+        with open(highscore_file, "r") as file:
+            highscore = int(file.read())
+            if score > highscore:
+                highscore = score
+                with open(highscore_file, "w") as file:
+                    file.write(str(highscore))
+    except FileNotFoundError:
+        highscore = score
+        with open(highscore_file, "w") as file:
+            file.write(str(highscore))
+
+    return highscore
+
+
+score = 100  # siin on näidisskoor
+current_highscore = highscore(score)
+print(f"Highscore: {current_highscore}")
+
+# Lisame highscore ekraanile
+highscore_text = highscore_font.render(f"Highscore: {current_highscore}", True, (255, 255, 255))
+highscore_rect = highscore_text.get_rect()
+highscore_rect.centerx = dis.get_rect().centerx
+highscore_rect.y = 10
+dis.blit(highscore_text, highscore_rect)
 
 
 # Määrab funktsioon our_snake(), et joonistada madu ekraanile.
@@ -147,4 +174,3 @@ def gameLoop():
 
 
 gameLoop()
-
